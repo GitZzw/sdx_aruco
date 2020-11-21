@@ -1,0 +1,12 @@
+<launch>
+
+  <arg name="id" default="0"/>
+  <arg name="index" default="0"/>
+
+  <arg name="display" default="true"/>
+	<node name="aruco_detect" pkg="camera_test" type="camera_detect_aruco" output="screen">
+		<rosparam command="load" file="$(find camera_test)/cfg/camera$(arg id)_param.yaml" />
+		<param name="display" value="$(arg display)"/>
+		<param name="index" value="$(arg index)"/>
+	</node>
+</launch>
