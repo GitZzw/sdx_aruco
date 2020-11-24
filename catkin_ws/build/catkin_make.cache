@@ -1,0 +1,2 @@
+camera_test
+-DCATKIN_DEVEL_PREFIX=/home/hjk/Desktop/zzw/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/hjk/Desktop/zzw/catkin_ws/install -G Unix Makefiles

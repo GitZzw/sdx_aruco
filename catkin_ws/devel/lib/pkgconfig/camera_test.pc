@@ -1,0 +1,8 @@
+prefix=/home/hjk/Desktop/zzw/catkin_ws/devel
+
+Name: camera_test
+Description: Description of camera_test
+Version: 0.0.0
+Cflags: -I/home/hjk/Desktop/zzw/catkin_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime
