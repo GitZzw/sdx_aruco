@@ -18,6 +18,7 @@ using namespace std;
 #define SIZE 1000
 
 ros::Publisher pub;
+ros::Publisher pubbig;
 
 class arucoDetect {
 public:
@@ -68,7 +69,8 @@ arucoDetect *arucoDetect::instance = nullptr;
 int main(int argc, char **argv) {
     ros::init(argc, argv, "aruco_detect");
     ros::NodeHandle nh("aruco_detect");
-    pub = nh.advertise<camera_test::zzw>("send_data", 100);
+    pub = nh.advertise<camera_test::zzw>("send_data_small", 100);
+    pubbig = nh.advertise<camera_test::zzw>("send_data_big", 100);
     arucoDetect *detect = arucoDetect::GetInstance();
     detect->loadStart(nh);
 }
@@ -197,9 +199,55 @@ arucoDetect::startDetect() {
         cv::aruco::detectMarkers(image, dictionary, corners, ids, detectorParameters);
         // if at least one marker detected
         if (!ids.empty()) {
-            cv::aruco::estimatePoseSingleMarkers(corners, 0.25, cameraMatrix, distCoeffs, rvecs,
-                                                 tvecs); // draw axis for each marker
 
+            //big aruco--zzw_added
+            if(find(ids.begin(), ids.end(), 4)!=ids.end()){
+                cout<<"big aruco detected"<<endl;
+                vector<int>::iterator iter = find(ids.begin(), ids.end(), 4);
+
+                int dex = iter-ids.begin();
+                cout<<dex<<endl;
+                std::vector<std::vector<cv::Point2f>> corner;
+                corner.push_back(corners[dex]);
+                std::vector<int> id;
+                id.push_back(ids[dex]);
+                cv::aruco::estimatePoseSingleMarkers(corner, 1, cameraMatrix, distCoeffs, rvecs,
+                                                     tvecs);
+                //transform
+                cv::Affine3d axis_to_cam=cv::Affine3d(rvecs[0],tvecs[0]);
+                cv::Affine3d cam_to_axis = axis_to_cam.inv();
+
+                cv::Matx44d world_to_cam_mtx;
+                world_to_cam_mtx << 0,0,1,0,-1,0,0,0,0,-1,0,0,0,0,0,1;
+                cv::Affine3d world_to_cam(world_to_cam_mtx);
+                cv::Affine3d world_to_axis = cam_to_axis.concatenate(world_to_cam);
+
+                tf::Quaternion q;
+                double theta = sqrt(world_to_axis.rvec()[0] * world_to_axis.rvec()[0] +
+                        world_to_axis.rvec()[1] * world_to_axis.rvec()[1] + world_to_axis.rvec()[2] * world_to_axis.rvec()[2]);
+                tf::Vector3 axis = tf::Vector3(world_to_axis.rvec()[0]/theta,
+                        world_to_axis.rvec()[1]/theta, world_to_axis.rvec()[2]/theta);
+                q.setRotation(axis,theta);
+
+                //send message--zzw_added
+                camera_test::zzw world_to_axis_posestamped;
+                world_to_axis_posestamped.header.stamp = ros::Time::now();
+                world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*1000;
+                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*1000;
+                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2]*1000;
+                world_to_axis_posestamped.pose.orientation.w = q.w();
+                world_to_axis_posestamped.pose.orientation.x = q.x();
+                world_to_axis_posestamped.pose.orientation.y = q.y();
+                world_to_axis_posestamped.pose.orientation.z = q.z();
+                world_to_axis_posestamped.id = id[0];
+                pubbig.publish(world_to_axis_posestamped);
+
+            }
+
+
+            // small aruco--zzw_added
+            cv::aruco::estimatePoseSingleMarkers(corners, 0.25, cameraMatrix, distCoeffs, rvecs,
+                                                 tvecs);
 
             double currentTime = ((double) getTickCount() - tick) / getTickFrequency();
             totalTime += currentTime;
@@ -231,16 +279,16 @@ arucoDetect::startDetect() {
                 //send message--zzw_added
                 camera_test::zzw world_to_axis_posestamped;
                 world_to_axis_posestamped.header.stamp = ros::Time::now();
-                world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0];
-                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1];
-                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2];
+                world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*1000;
+                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*1000;
+                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2]*1000;
                 world_to_axis_posestamped.pose.orientation.w = q.w();
                 world_to_axis_posestamped.pose.orientation.x = q.x();
                 world_to_axis_posestamped.pose.orientation.y = q.y();
                 world_to_axis_posestamped.pose.orientation.z = q.z();
                 world_to_axis_posestamped.id = ids[j];
                 pub.publish(world_to_axis_posestamped);
-
+            }
 
                 //origin code in for loop--zzw_commited
 //                std::string cameraCoordinateName = "own_camera";
@@ -252,7 +300,7 @@ arucoDetect::startDetect() {
 //                trans.setRotation(q);
 //                br.sendTransform(
 //                        tf::StampedTransform(trans, ros::Time::now(), arucoCoordinateName, cameraCoordinateName));
-            }
+
 
             if (display) {
                 cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
