@@ -76,11 +76,11 @@ int main(int argc, char **argv) {
  */
 void arucoDetect::loadStart(ros::NodeHandle &nh) {
     instance = this;
-    loadRosParam(nh);
-    openCamera(index);
     display = false;
     cameraMatrix = (Mat_<float>(3, 3) << 0, 0, 0, 0, 0, 0, 0, 0, 0);
     distCoeffs = (Mat_<float>(1, 5) << 0, 0, 0, 0, 0);
+    loadRosParam(nh);
+    openCamera(index);
     watchSignal();
     startDetect();
 }

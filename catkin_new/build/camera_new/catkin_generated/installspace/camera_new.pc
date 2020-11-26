@@ -1,0 +1,8 @@
+prefix=/home/hjk/Desktop/zzw/catkin_new/install
+
+Name: camera_new
+Description: Description of camera_new
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime

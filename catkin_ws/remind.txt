@@ -15,6 +15,7 @@ https://www.baidu.com/s?wd=cv%3A%3Aaruco%3A%3ADetectorParameters%3A%3ADetectorPa
 
 
 
+matlab标定得到的矩阵跟cv是转置关系
 
 
 
@@ -55,6 +56,8 @@ pose_pub.publish(world_to_drone_posestamped);
 
 
 
+matx44d矩阵初始化方法
+
 
 
  生成消息步骤及报错原因
@@ -70,6 +73,18 @@ geometry_msgs/Pose pose
 uint8 id
 所以要在cmakelists里面find_package()中添加std_msgs和geometry_msgs
 然后在gernerate_messages()中添加std_msgs和geometry_msgs
+
+
+
+
+
+
+
+
+realsense T265使用
+获取鱼眼相机数据
+https://blog.csdn.net/u013595260/article/details/108470791
+注意要同时开启两个
 
 
 
