@@ -107,6 +107,13 @@ https://docs.opencv.org/master/d4/d94/tutorial_camera_calibration.html
 https://github.com/opencv/opencv/blob/master/samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp
 
 
+cv_bridge python参考
+http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython
+
+
+
+ls /dev/video*
+
 
 
 

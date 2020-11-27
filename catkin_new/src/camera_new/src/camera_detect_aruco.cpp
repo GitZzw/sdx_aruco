@@ -113,7 +113,7 @@ void arucoDetect::loadStart(ros::NodeHandle &nh) {
 void arucoDetect::initPubSub(ros::NodeHandle &nh){
     pub = nh.advertise<camera_test::zzw>("send_data_small", 100);
     pubbig = nh.advertise<camera_test::zzw>("send_data_big", 100);
-    sub = nh.subscribe("/camera/fisheye1/image_raw", 100,&arucoDetect::imageCb, this);
+    sub = nh.subscribe("/cali_image", 100,&arucoDetect::imageCb, this);
 }
 
 
@@ -273,8 +273,9 @@ arucoDetect::startDetect() {
                 cv::Affine3d cam_to_axis = axis_to_cam.inv();
 
                 cv::Matx44d world_to_cam_mtx;
-                world_to_cam_mtx << 0,0,1,0,-1,0,0,0,0,-1,0,0,0,0,0,1;
+                world_to_cam_mtx << 0,0,1,0,-1,0,0,0,0,1,0,0,0,0,0,1;
                 cv::Affine3d world_to_cam(world_to_cam_mtx);
+                cout<<world_to_cam_mtx<<endl;
                 cv::Affine3d world_to_axis = cam_to_axis.concatenate(world_to_cam);
 
                 tf::Quaternion q;
@@ -301,7 +302,7 @@ arucoDetect::startDetect() {
 
 
             // small aruco--zzw_added
-            cv::aruco::estimatePoseSingleMarkers(corners, 0.18, cameraMatrix, distCoeffs, rvecs,
+            cv::aruco::estimatePoseSingleMarkers(corners, 0.25, cameraMatrix, distCoeffs, rvecs,
                                                  tvecs);
 
             double currentTime = ((double) getTickCount() - tick) / getTickFrequency();
@@ -335,8 +336,8 @@ arucoDetect::startDetect() {
                 camera_test::zzw world_to_axis_posestamped;
                 world_to_axis_posestamped.header.stamp = ros::Time::now();
                 world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*100;
-                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*100;
-                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2]*100;
+                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[2]*100;
+                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[1]*100;
                 world_to_axis_posestamped.pose.orientation.w = q.w();
                 world_to_axis_posestamped.pose.orientation.x = q.x();
                 world_to_axis_posestamped.pose.orientation.y = q.y();

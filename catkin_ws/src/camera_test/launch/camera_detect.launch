@@ -1,7 +1,7 @@
 <launch>
 
   <arg name="id" default="0"/>
-  <arg name="index" default="2"/>
+  <arg name="index" default="0"/>
 
   <arg name="display" default="true"/>
 	<node name="aruco_detect" pkg="camera_test" type="camera_detect_aruco" output="screen">

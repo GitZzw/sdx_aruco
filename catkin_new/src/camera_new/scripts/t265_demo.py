@@ -29,6 +29,7 @@ $ source py3librs/bin/activate  # Activate the virtual environment
 $ python3 t265_stereo.py        # Run the example
 """
 
+
 # First import the library
 import pyrealsense2 as rs
 
@@ -37,7 +38,9 @@ import cv2
 import numpy as np
 from math import tan, pi
 import ros
-
+import rospy
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge, CvBridgeError
 """
 In this section, we will set up the functions that will translate the camera
 intrinsics and extrinsics from librealsense into parameters that can be used
@@ -111,11 +114,14 @@ pipe.start(cfg, callback)
 
 
 # zzw_added
+rospy.init_node('cali_node', anonymous=True)
+pub = rospy.Publisher('cali_image', Image, queue_size=100)
+rate = rospy.Rate(30)
 
 try:
-    # Set up an OpenCV window to visualize the results
-    WINDOW_TITLE = 'Realsense'
-    cv2.namedWindow(WINDOW_TITLE, cv2.WINDOW_NORMAL)
+#     Set up an OpenCV window to visualize the results
+#    WINDOW_TITLE = 'Realsense'
+#    cv2.namedWindow(WINDOW_TITLE, cv2.WINDOW_NORMAL)
 
     # Configure the OpenCV stereo algorithm. See
     # https://docs.opencv.org/3.4/d2/d85/classcv_1_1StereoSGBM.html for a
@@ -248,19 +254,13 @@ try:
             disp_color = cv2.applyColorMap(cv2.convertScaleAbs(disp_vis,1), cv2.COLORMAP_JET)
             color_image = cv2.cvtColor(center_undistorted["left"][:,max_disp:], cv2.COLOR_GRAY2RGB)
 
-            if mode == "stack":
-                #cv2.imshow(WINDOW_TITLE, np.hstack((color_image, disp_color)))
-                cv2.imshow(WINDOW_TITLE, color_image)
-            if mode == "overlay":
-                ind = disparity >= min_disp
-                color_image[ind, 0] = disp_color[ind, 0]
-                color_image[ind, 1] = disp_color[ind, 1]
-                color_image[ind, 2] = disp_color[ind, 2]
-                cv2.imshow(WINDOW_TITLE, color_image)
+#            cv2.imshow(WINDOW_TITLE, color_image)
+#            cv2.waitKey(1)
+            bridge = CvBridge()
+            pub.publish(bridge.cv2_to_imgmsg(color_image, "bgr8"))
+            rate.sleep()
         key = cv2.waitKey(1)
-        if key == ord('s'): mode = "stack"
-        if key == ord('o'): mode = "overlay"
-#        if key == ord('q') or cv2.getWindowProperty(WINDOW_TITLE, cv2.WND_PROP_VISIBLE) < 1:
-#            break
+        if key == ord('s'):
+            break
 finally:
     pipe.stop()

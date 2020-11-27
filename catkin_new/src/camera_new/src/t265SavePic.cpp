@@ -21,7 +21,7 @@ ImageConverter()
 : it_(nh_)
 {
 // Subscrive to input video feed and publish output video feed
-image_sub_ = it_.subscribe("/camera/fisheye1/image_raw", 1,
+image_sub_ = it_.subscribe("/cali_image", 1,
 &ImageConverter::imageCb, this);
 image_pub_ = it_.advertise("/image_converter/output_video", 1);
 
@@ -50,14 +50,14 @@ return;
 // Update GUI Window
 cv::imshow(OPENCV_WINDOW, cv_ptr->image);
 
-//if(cv::waitKey(3)=='w'){
-//    cv::imwrite("./pic"+std::to_string(count)+".png",cv_ptr->image);
-//    count ++;
-//}
+if(cv::waitKey(3)=='w'){
+    cv::imwrite("./pic"+std::to_string(count)+".png",cv_ptr->image);
+    count ++;
+}
 
-cv::waitKey(3);
-cv::imwrite("./pic"+std::to_string(count)+".png",cv_ptr->image);
-count ++;
+//cv::waitKey(3);
+//cv::imwrite("./pic"+std::to_string(count)+".png",cv_ptr->image);
+//count ++;
 
 // Output modified video stream
 image_pub_.publish(cv_ptr->toImageMsg());
