@@ -18,6 +18,13 @@ uint32 score
 ```
 
 * 4.在CMakelist.txt文件中添加package需求：message_generation和对应的消息类型如std_msgs
+> 比如我的msg定义为
+  std_msgs/Header header
+  geometry_msgs/Pose pose
+  uint8 id
+  所以要在cmakelists里面find_package()中添加std_msgs和geometry_msgs
+  然后在gernerate_messages()中添加std_msgs和geometry_msgs
+  
 ```make
 # Do not just add this to your CMakeLists.txt, modify the existing text to add message_generation before the closing parenthesis
 find_package(catkin REQUIRED COMPONENTS
