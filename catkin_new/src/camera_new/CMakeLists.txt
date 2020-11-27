@@ -74,3 +74,6 @@ add_dependencies(camera_fisheye_cali        ${${PROJECT_NAME}_EXPORTED_TARGETS} 
 target_link_libraries(camera_fisheye_cali ${OpenCV_LIBS} ${catkin_LIBRARIES} )
 
 
+
+
+

@@ -101,7 +101,13 @@ https://blog.csdn.net/coldplayplay/article/details/78580727
 
 鱼眼相机标定
 https://blog.csdn.net/qq_30263737/article/details/105694765
-t2
+
+opencv官方的标定
+https://docs.opencv.org/master/d4/d94/tutorial_camera_calibration.html
+https://github.com/opencv/opencv/blob/master/samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp
+
+
+
 
 
 

@@ -3,6 +3,10 @@
 ## License: Apache 2.0. See LICENSE file in root directory.
 ## Copyright(c) 2019 Intel Corporation. All Rights Reserved.
 # Python 2/3 compatibility
+
+
+
+### Reference https://github.com/IntelRealSense/librealsense/blob/master/wrappers/python/examples/t265_stereo.py
 from __future__ import print_function
 
 """
@@ -32,6 +36,7 @@ import pyrealsense2 as rs
 import cv2
 import numpy as np
 from math import tan, pi
+import ros
 
 """
 In this section, we will set up the functions that will translate the camera
@@ -66,7 +71,7 @@ Returns the fisheye distortion from librealsense intrinsics
 def fisheye_distortion(intrinsics):
     return np.array(intrinsics.coeffs[:4])
 
-# Set up a mutex to share data between threads
+# Set up a mutex to share data between threads 
 from threading import Lock
 frame_mutex = Lock()
 frame_data = {"left"  : None,
@@ -87,8 +92,6 @@ def callback(frame):
         f1 = frameset.get_fisheye_frame(1).as_video_frame()
         f2 = frameset.get_fisheye_frame(2).as_video_frame()
         left_data = np.asanyarray(f1.get_data())
-        print(type(left_data))
-        cv2.imshow("color",left_data)
         right_data = np.asanyarray(f2.get_data())
         ts = frameset.get_timestamp()
         frame_mutex.acquire()
@@ -105,6 +108,9 @@ cfg = rs.config()
 
 # Start streaming with our callback
 pipe.start(cfg, callback)
+
+
+# zzw_added
 
 try:
     # Set up an OpenCV window to visualize the results
@@ -243,7 +249,8 @@ try:
             color_image = cv2.cvtColor(center_undistorted["left"][:,max_disp:], cv2.COLOR_GRAY2RGB)
 
             if mode == "stack":
-                cv2.imshow(WINDOW_TITLE, np.hstack((color_image, disp_color)))
+                #cv2.imshow(WINDOW_TITLE, np.hstack((color_image, disp_color)))
+                cv2.imshow(WINDOW_TITLE, color_image)
             if mode == "overlay":
                 ind = disparity >= min_disp
                 color_image[ind, 0] = disp_color[ind, 0]

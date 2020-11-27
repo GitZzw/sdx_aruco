@@ -8,6 +8,7 @@
 static const std::string OPENCV_WINDOW = "Image window";
 
 int count = 0;
+int i = 0;
 class ImageConverter
 {
 ros::NodeHandle nh_;
@@ -49,10 +50,14 @@ return;
 // Update GUI Window
 cv::imshow(OPENCV_WINDOW, cv_ptr->image);
 
-if(cv::waitKey(3)=='w'){
-    cv::imwrite("./pic"+std::to_string(count)+".png",cv_ptr->image);
-    count ++;
-}
+//if(cv::waitKey(3)=='w'){
+//    cv::imwrite("./pic"+std::to_string(count)+".png",cv_ptr->image);
+//    count ++;
+//}
+
+cv::waitKey(3);
+cv::imwrite("./pic"+std::to_string(count)+".png",cv_ptr->image);
+count ++;
 
 // Output modified video stream
 image_pub_.publish(cv_ptr->toImageMsg());

@@ -247,11 +247,11 @@ arucoDetect::startDetect() {
         std::vector<int> ids;
         std::vector<std::vector<cv::Point2f> > corners;
         vector<Vec3d> rvecs, tvecs;
-        Ptr<aruco::DetectorParameters> detectorParameters=aruco::DetectorParameters::create();
-        detectorParameters->adaptiveThreshWinSizeMin = 30;
-        detectorParameters->adaptiveThreshWinSizeMax = 50;
-        detectorParameters->adaptiveThreshWinSizeStep = 4;
-        cv::aruco::detectMarkers(image, dictionary, corners, ids, detectorParameters);
+//        Ptr<aruco::DetectorParameters> detectorParameters=aruco::DetectorParameters::create();
+//        detectorParameters->adaptiveThreshWinSizeMin = 30;
+//        detectorParameters->adaptiveThreshWinSizeMax = 50;
+//        detectorParameters->adaptiveThreshWinSizeStep = 4;
+        cv::aruco::detectMarkers(image, dictionary, corners, ids);
         // if at least one marker detected
         if (!ids.empty()) {
 
@@ -287,9 +287,9 @@ arucoDetect::startDetect() {
                 //send message--zzw_added
                 camera_test::zzw world_to_axis_posestamped;
                 world_to_axis_posestamped.header.stamp = ros::Time::now();
-                world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*1000;
-                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*1000;
-                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2]*1000;
+                world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*100;
+                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*100;
+                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2]*100;
                 world_to_axis_posestamped.pose.orientation.w = q.w();
                 world_to_axis_posestamped.pose.orientation.x = q.x();
                 world_to_axis_posestamped.pose.orientation.y = q.y();
@@ -301,7 +301,7 @@ arucoDetect::startDetect() {
 
 
             // small aruco--zzw_added
-            cv::aruco::estimatePoseSingleMarkers(corners, 0.25, cameraMatrix, distCoeffs, rvecs,
+            cv::aruco::estimatePoseSingleMarkers(corners, 0.18, cameraMatrix, distCoeffs, rvecs,
                                                  tvecs);
 
             double currentTime = ((double) getTickCount() - tick) / getTickFrequency();
@@ -334,9 +334,9 @@ arucoDetect::startDetect() {
                 //send message--zzw_added
                 camera_test::zzw world_to_axis_posestamped;
                 world_to_axis_posestamped.header.stamp = ros::Time::now();
-                world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0];
-                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1];
-                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2];
+                world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*100;
+                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*100;
+                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2]*100;
                 world_to_axis_posestamped.pose.orientation.w = q.w();
                 world_to_axis_posestamped.pose.orientation.x = q.x();
                 world_to_axis_posestamped.pose.orientation.y = q.y();

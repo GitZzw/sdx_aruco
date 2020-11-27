@@ -14,7 +14,7 @@ using namespace cv;
 int main(int argc, char** argv)
 {
     vector<string> files;
-    for(auto count =2;count<=25;count++){
+    for(auto count =100;count<=2000;count++){
         files.push_back("/home/hjk/Desktop/zzw/catkin_new/pic/pic"+to_string(count)+".png");
     }
     const int board_w = 11;
