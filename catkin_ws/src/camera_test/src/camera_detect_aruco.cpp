@@ -229,8 +229,8 @@ arucoDetect::startDetect() {
                 camera_test::zzw world_to_axis_posestamped;
                 world_to_axis_posestamped.header.stamp = ros::Time::now();
                 world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*100;
-                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*100;
-                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[2]*100;//unit is cm
+                world_to_axis_posestamped.pose.position.y = -world_to_axis.translation()[2]*100;
+                world_to_axis_posestamped.pose.position.z = -world_to_axis.translation()[1]*100;//unit is cm
                 world_to_axis_posestamped.pose.orientation.w = q.w();
                 world_to_axis_posestamped.pose.orientation.x = q.x();
                 world_to_axis_posestamped.pose.orientation.y = q.y();
@@ -276,8 +276,8 @@ arucoDetect::startDetect() {
                 camera_test::zzw world_to_axis_posestamped;
                 world_to_axis_posestamped.header.stamp = ros::Time::now();
                 world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*100;
-                world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[2]*100;
-                world_to_axis_posestamped.pose.position.z = world_to_axis.translation()[1]*100;
+                world_to_axis_posestamped.pose.position.y = -world_to_axis.translation()[2]*100;
+                world_to_axis_posestamped.pose.position.z = -world_to_axis.translation()[1]*100;
                 world_to_axis_posestamped.pose.orientation.w = q.w();
                 world_to_axis_posestamped.pose.orientation.x = q.x();
                 world_to_axis_posestamped.pose.orientation.y = q.y();
