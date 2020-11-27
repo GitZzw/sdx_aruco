@@ -8,10 +8,14 @@
 
 
 
-## 获取到相机相对于二维码的位姿之后，参考李jy师兄的代码，并进行ros pose发布(四元数)，进行坐标系转换，转换为uav东北天坐标系
+#### 获取到相机相对于二维码的位姿之后，参考李jy师兄的代码，并进行ros pose发布(四元数)，进行坐标系转换，转换为uav东北天坐标系
 其中用到了仿射变换(埋坑)
 
-#### 注意:以下代码中matx44d矩阵初始化方法不对，改写为`cv::Matx44d world_to_cam_mtx;world_to_cam_mtx<<0, 0, 1, 0, -1, 0, 0, 0, 0, -1, 0, 0.611, 0, 0, 0, 1;`才能成功初始化
+> 注意:以下代码中matx44d矩阵初始化方法不对，改写为   
+  `cv::Matx44d world_to_cam_mtx;world_to_cam_mtx<<0, 0, 1, 0, -1, 0, 0, 0, 0, -1, 0, 0.611, 0, 0, 0, 1;`   
+  才能成功初始化 
+  
+  
 ```c++
 cv::solvePnP(objectPts, ImagePts, cameraMatrix, distcoeffs, rvec, tvec);                           
 cv::Affine3d cam_to_drone = cv::Affine3d(rvec, tvec);
