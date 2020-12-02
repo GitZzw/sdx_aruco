@@ -209,10 +209,10 @@ arucoDetect::startDetect() {
                                                      tvecs);
                 //transform
                 cv::Affine3d axis_to_cam=cv::Affine3d(rvecs[0],tvecs[0]);
-                cv::Affine3d cam_to_axis = axis_to_cam.inv();
-
+                //cv::Affine3d cam_to_axis = axis_to_cam.inv();
+                cv::Affine3d cam_to_axis = axis_to_cam;
                 cv::Matx44d world_to_cam_mtx;
-                world_to_cam_mtx << 0,0,1,0,0,1,0,0,-1,0,0,0,0,0,0,1;
+                world_to_cam_mtx << 0,0,1,0,-1,0,0,0,0,-1,0,0,0,0,0,1;
                 cv::Affine3d world_to_cam(world_to_cam_mtx);
                 cv::Affine3d world_to_axis = cam_to_axis.concatenate(world_to_cam);
 
@@ -254,10 +254,10 @@ arucoDetect::startDetect() {
 
                 //transfrom--zzw_added
                 cv::Affine3d axis_to_cam=cv::Affine3d(rvecs[j],tvecs[j]);
-                cv::Affine3d cam_to_axis = axis_to_cam.inv();
-
+                //cv::Affine3d cam_to_axis = axis_to_cam.inv();
+                cv::Affine3d cam_to_axis = axis_to_cam;
                 cv::Matx44d world_to_cam_mtx;
-                world_to_cam_mtx << 0,0,1,0,0,1,0,0,-1,0,0,0,0,0,0,1;
+                world_to_cam_mtx << 0,0,1,0,-1,0,0,0,0,-1,0,0,0,0,0,1;
                 cv::Affine3d world_to_cam(world_to_cam_mtx);
                 cv::Affine3d world_to_axis = cam_to_axis.concatenate(world_to_cam);
 
