@@ -1,2 +1,0 @@
-cat
--DCATKIN_DEVEL_PREFIX=/home/hjk/Desktop/zzw/cat/devel -DCMAKE_INSTALL_PREFIX=/home/hjk/Desktop/zzw/cat/install -G Unix Makefiles

@@ -12,7 +12,7 @@
 #include <ros/ros.h>
 #include <csignal>
 #include <tf/transform_broadcaster.h>
-#include <cat/zzw.h>
+#include <camera_new/zzw.h>
 #include<image_transport/image_transport.h>
 #include<cv_bridge/cv_bridge.h>
 #include<sensor_msgs/image_encodings.h>
@@ -111,9 +111,9 @@ void arucoDetect::loadStart(ros::NodeHandle &nh) {
 
 
 void arucoDetect::initPubSub(ros::NodeHandle &nh){
-    pub = nh.advertise<cat::zzw>("send_data_small", 100);
-    pubbig = nh.advertise<cat::zzw>("send_data_big", 100);
-    sub = nh.subscribe("/camera/fisheye1/image_raw", 100,&arucoDetect::imageCb, this);
+    pub = nh.advertise<camera_new::zzw>("send_data_small", 100);
+    pubbig = nh.advertise<camera_new::zzw>("send_data_big", 100);
+    sub = nh.subscribe("/cali_image", 100,&arucoDetect::imageCb, this);
 }
 
 
@@ -275,6 +275,7 @@ arucoDetect::startDetect() {
                 cv::Matx44d world_to_cam_mtx;
                 world_to_cam_mtx << 0,0,1,0,-1,0,0,0,0,-1,0,0,0,0,0,1;
                 cv::Affine3d world_to_cam(world_to_cam_mtx);
+                cout<<world_to_cam_mtx<<endl;
                 cv::Affine3d world_to_axis = cam_to_axis.concatenate(world_to_cam);
 
                 tf::Quaternion q;
@@ -285,7 +286,7 @@ arucoDetect::startDetect() {
                 q.setRotation(axis,theta);
 
                 //send message--zzw_added
-                cat::zzw world_to_axis_posestamped;
+                camera_new::zzw world_to_axis_posestamped;
                 world_to_axis_posestamped.header.stamp = ros::Time::now();
                 world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*100;
                 world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*100;
@@ -332,7 +333,7 @@ arucoDetect::startDetect() {
 
 
                 //send message--zzw_added
-                cat::zzw world_to_axis_posestamped;
+                camera_new::zzw world_to_axis_posestamped;
                 world_to_axis_posestamped.header.stamp = ros::Time::now();
                 world_to_axis_posestamped.pose.position.x = world_to_axis.translation()[0]*100;
                 world_to_axis_posestamped.pose.position.y = world_to_axis.translation()[1]*100;

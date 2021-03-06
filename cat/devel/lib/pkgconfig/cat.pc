@@ -1,8 +1,0 @@
-prefix=/home/hjk/Desktop/zzw/cat/devel
-
-Name: cat
-Description: Description of cat
-Version: 0.0.0
-Cflags: -I/home/hjk/Desktop/zzw/cat/devel/include
-Libs: -L${prefix}/lib 
-Requires: message_runtime
